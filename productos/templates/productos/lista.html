@@ -1,0 +1,15 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<h1>Productos</h1>
+<ul>
+  {% for producto in productos %}
+    <li>
+      {{ producto.nombre }} - ${{ producto.precio }}
+      <a href="{% url 'agregar_al_carrito' producto.id %}">Agregar al carrito</a>
+    </li>
+  {% empty %}
+    <li>No hay productos disponibles.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

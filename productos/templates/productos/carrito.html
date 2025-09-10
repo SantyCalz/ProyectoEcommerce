@@ -1,0 +1,24 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<h1>Mi Carrito</h1>
+<ul>
+  {% for item in carrito.carritoproducto_set.all %}
+    <li>
+      {{ item.producto.nombre }} - ${{ item.producto.precio }} x {{ item.cantidad }} = ${{ item.subtotal }}
+      <a href="{% url 'eliminar_del_carrito' item.producto.id %}">Eliminar</a>
+    </li>
+  {% empty %}
+    <li>No hay productos en el carrito.</li>
+  {% endfor %}
+</ul>
+
+<p>Total: ${{ carrito.total }}</p>
+
+<p><a href="{% url 'lista_productos' %}">Seguir comprando</a></p>
+
+{% if carrito.carritoproducto_set.all %}
+<p><a href="{% url 'checkout' %}">Ir al Checkout</a></p>
+<p><a href="{% url 'vaciar_carrito' %}">Vaciar carrito</a></p>
+{% endif %}
+{% endblock %}

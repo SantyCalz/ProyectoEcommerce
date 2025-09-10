@@ -1,0 +1,24 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<h1>Checkout</h1>
+
+<ul>
+  {% for item in carrito.carritoproducto_set.all %}
+    <li>
+      {{ item.producto.nombre }} - ${{ item.producto.precio }} x {{ item.cantidad }} = ${{ item.subtotal }}
+    </li>
+  {% empty %}
+    <li>No hay productos en el carrito.</li>
+  {% endfor %}
+</ul>
+
+<p>Total: ${{ total }}</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Finalizar Compra</button>
+</form>
+
+<p><a href="{% url 'ver_carrito' %}">Volver al carrito</a></p>
+{% endblock %}
