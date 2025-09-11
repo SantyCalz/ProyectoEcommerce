@@ -2,23 +2,51 @@
 
 {% block content %}
 <h1>Mi Carrito</h1>
-<ul>
-  {% for item in carrito.carritoproducto_set.all %}
-    <li>
-      {{ item.producto.nombre }} - ${{ item.producto.precio }} x {{ item.cantidad }} = ${{ item.subtotal }}
-      <a href="{% url 'eliminar_del_carrito' item.producto.id %}">Eliminar</a>
-    </li>
-  {% empty %}
-    <li>No hay productos en el carrito.</li>
-  {% endfor %}
-</ul>
 
-<p>Total: ${{ carrito.total }}</p>
+<div class="contenido-carrito">
+    <div class="carrito-panel">
+        {% if carrito.carritoproducto_set.all %}
+        <table class="carrito-tabla">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
+                    <th>Subtotal</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in carrito.carritoproducto_set.all %}
+                <tr>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.producto.precio }}</td>
+                    <td>${{ item.subtotal }}</td>
+                    <td>
+                        {% if item.producto.stock == 0 %}
+                            <span class="sin-stock">Sin Stock</span>
+                        {% elif item.cantidad >= item.producto.stock %}
+                            <span class="stock-bajo">Máximo disponible</span>
+                        {% else %}
+                            <a class="btn-carrito" href="{% url 'agregar_al_carrito' item.producto.id %}">+</a>
+                        {% endif %}
+                        <a class="btn-carrito eliminar" href="{% url 'eliminar_del_carrito' item.producto.id %}">Eliminar</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <p>Total: ${{ total }}</p>
+        <div class="botones-carrito">
+            <a href="{% url 'lista_productos' %}">Seguir comprando</a>
+            <a href="{% url 'checkout' %}">Ir al Checkout</a>
+            <a href="{% url 'vaciar_carrito' %}">Vaciar carrito</a>
+        </div>
+        {% else %}
+            <p>No hay productos en el carrito.</p>
+        {% endif %}
+    </div>
+</div>
 
-<p><a href="{% url 'lista_productos' %}">Seguir comprando</a></p>
-
-{% if carrito.carritoproducto_set.all %}
-<p><a href="{% url 'checkout' %}">Ir al Checkout</a></p>
-<p><a href="{% url 'vaciar_carrito' %}">Vaciar carrito</a></p>
-{% endif %}
 {% endblock %}

@@ -116,6 +116,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+# Archivos multimedia (para imágenes de productos, etc.)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# URL a la que se redirige si el usuario no está logueado
+LOGIN_URL = '/login/'
+
+# URL a la que se redirige después de hacer login
+LOGIN_REDIRECT_URL = '/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

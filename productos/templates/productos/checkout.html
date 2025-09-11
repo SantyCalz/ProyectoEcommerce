@@ -3,22 +3,42 @@
 {% block content %}
 <h1>Checkout</h1>
 
-<ul>
+{% if carrito.carritoproducto_set.all %}
+<div class="productos-grid">
   {% for item in carrito.carritoproducto_set.all %}
-    <li>
-      {{ item.producto.nombre }} - ${{ item.producto.precio }} x {{ item.cantidad }} = ${{ item.subtotal }}
-    </li>
-  {% empty %}
-    <li>No hay productos en el carrito.</li>
+    <div class="producto-card">
+        {% if item.producto.imagen %}
+            <img src="{{ item.producto.imagen.url }}" alt="{{ item.producto.nombre }}">
+        {% else %}
+            <img src="https://via.placeholder.com/150" alt="Sin imagen">
+        {% endif %}
+        <h3>{{ item.producto.nombre }}</h3>
+        <p>Cantidad: {{ item.cantidad }}</p>
+        <p>Precio unitario: ${{ item.producto.precio }}</p>
+        <p><strong>Subtotal: ${{ item.subtotal }}</strong></p>
+    </div>
   {% endfor %}
-</ul>
+</div>
 
-<p>Total: ${{ total }}</p>
+<p>Total a pagar: <strong>${{ total }}</strong></p>
 
 <form method="post">
     {% csrf_token %}
     <button type="submit">Finalizar Compra</button>
 </form>
 
-<p><a href="{% url 'ver_carrito' %}">Volver al carrito</a></p>
+<a href="{% url 'ver_carrito' %}">Volver al carrito</a>
+
+{% else %}
+<p>No hay productos en el carrito.</p>
+<a href="{% url 'lista_productos' %}">Volver a la tienda</a>
+{% endif %}
 {% endblock %}
+
+<form method="post">
+    {% csrf_token %}
+    <label for="direccion">Dirección de envío:</label>
+    <input type="text" name="direccion" id="direccion" required>
+    <button type="submit">Finalizar Compra</button>
+</form>
+
