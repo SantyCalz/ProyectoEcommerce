@@ -200,3 +200,68 @@ form button:hover {
     color: #666;
     pointer-events: none; /* No clickeable */
 }
+
+.detalle-producto {
+    display: flex;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.galeria {
+    flex: 1;
+}
+
+.imagen-principal {
+    width: 400px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.miniaturas img {
+    width: 80px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    transition: transform 0.2s;
+}
+
+.miniaturas img:hover {
+    transform: scale(1.1);
+}
+
+.info {
+    flex: 1;
+}
+
+.info h1 {
+    font-size: 2rem;
+    margin-bottom: 15px;
+}
+
+.precio {
+    font-size: 1.8rem;
+    color: #007bff;
+    margin-bottom: 15px;
+}
+
+.descripcion {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+.stock-disponible {
+    color: green;
+    font-weight: bold;
+}
+
+.stock-bajo {
+    color: orange;
+    font-weight: bold;
+}
+
+.sin-stock {
+    color: red;
+    font-weight: bold;
+}

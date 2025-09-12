@@ -8,6 +8,9 @@ from .forms import RegistroForm
 from .models import Pedido, PedidoProducto
 
 
+def detalle_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id=producto_id)
+    return render(request, 'productos/detalle_producto.html', {'producto': producto})
 
 def lista_productos(request):
     query = request.GET.get('q')  # texto buscador
@@ -157,3 +160,5 @@ def agregar_al_carrito(request, producto_id):
             carrito_producto.cantidad += 1
             carrito_producto.save()
     return redirect('ver_carrito')
+
+

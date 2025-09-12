@@ -23,13 +23,23 @@
 <div class="productos-grid">
   {% for producto in productos %}
     <div class="producto-card">
-        {% if producto.imagen %}
-            <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
-        {% else %}
-            <img src="https://via.placeholder.com/150" alt="Sin imagen">
-        {% endif %}
 
-        <h3>{{ producto.nombre }}</h3>
+        <!-- Imagen principal (clickeable al detalle) -->
+        <a href="{% url 'detalle_producto' producto.id %}">
+            {% if producto.imagen %}
+                <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
+            {% else %}
+                <img src="https://via.placeholder.com/150" alt="Sin imagen">
+            {% endif %}
+        </a>
+
+        <!-- Nombre clickeable al detalle -->
+        <h3>
+            <a href="{% url 'detalle_producto' producto.id %}">
+                {{ producto.nombre }}
+            </a>
+        </h3>
+
         <p>{{ producto.descripcion|truncatewords:15 }}</p>
         <p><strong>${{ producto.precio }}</strong></p>
 
@@ -42,6 +52,8 @@
         {% else %}
             <a class="btn-carrito" href="{% url 'agregar_al_carrito' producto.id %}">Agregar al carrito</a>
         {% endif %}
+
+
     </div>
   {% empty %}
     <p>No hay productos disponibles.</p>
