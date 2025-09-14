@@ -3,7 +3,6 @@
 {% block content %}
 <h1>Productos</h1>
 
-<!-- Buscador y filtro por categoría -->
 <form method="get" class="filtros">
     <input type="text" name="q" placeholder="Buscar producto..." value="{{ request.GET.q|default:'' }}">
     
@@ -19,12 +18,16 @@
     <button type="submit">Filtrar</button>
 </form>
 
-<!-- Grilla de productos -->
 <div class="productos-grid">
   {% for producto in productos %}
     <div class="producto-card">
 
-        <!-- Imagen principal (clickeable al detalle) -->
+        <!-- Badge ahorro -->
+        {% if producto.descuento > 0 %}
+        <div class="badge-ahorro">Ahorrás ${{ producto.ahorro|floatformat:0 }}</div>
+        {% endif %}
+
+        <!-- Imagen principal -->
         <a href="{% url 'detalle_producto' producto.id %}">
             {% if producto.imagen %}
                 <img src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}">
@@ -33,7 +36,7 @@
             {% endif %}
         </a>
 
-        <!-- Nombre clickeable al detalle -->
+        <!-- Nombre -->
         <h3>
             <a href="{% url 'detalle_producto' producto.id %}">
                 {{ producto.nombre }}
@@ -41,7 +44,21 @@
         </h3>
 
         <p>{{ producto.descripcion|truncatewords:15 }}</p>
-        <p><strong>${{ producto.precio }}</strong></p>
+
+        <!-- Precios -->
+        {% if producto.descuento > 0 %}
+            <p>
+                <span class="precio-original" style="text-decoration: line-through; color: #888;">
+                    ${{ producto.precio }}
+                </span>
+                <span class="precio-descuento" style="color: #28a745; font-weight: bold;">
+                    ${{ producto.precio_con_descuento|floatformat:2 }}
+                </span>
+                <span class="badge bg-danger">-{{ producto.descuento }}%</span>
+            </p>
+        {% else %}
+            <p><strong>${{ producto.precio }}</strong></p>
+        {% endif %}
 
         {% if producto.stock == 0 %}
             <p class="sin-stock">Sin Stock</p>
@@ -53,10 +70,31 @@
             <a class="btn-carrito" href="{% url 'agregar_al_carrito' producto.id %}">Agregar al carrito</a>
         {% endif %}
 
-
     </div>
   {% empty %}
     <p>No hay productos disponibles.</p>
   {% endfor %}
 </div>
+
+<style>
+.badge-ahorro {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: #ffc107;
+    color: #000;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+}
+.producto-card {
+    position: relative;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+</style>
 {% endblock %}

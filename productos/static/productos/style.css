@@ -265,3 +265,24 @@ form button:hover {
     color: red;
     font-weight: bold;
 }
+
+.precio-original {
+    text-decoration: line-through;
+    color: #888;
+    margin-right: 8px;
+}
+
+.precio-descuento {
+    color: #e60023;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
+.badge-descuento {
+    background-color: #ff4d4d;
+    color: white;
+    padding: 3px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    margin-left: 5px;
+}

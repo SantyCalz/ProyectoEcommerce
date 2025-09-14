@@ -4,42 +4,29 @@
 {% block head %}
 <link rel="stylesheet" href="{% static 'productos/detalle_producto.css' %}">
 <style>
-    .galeria {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+    .precio-original {
+        text-decoration: line-through;
+        color: #888;
+        margin-right: 10px;
     }
-
-    .imagen-principal {
-        max-width: 500px;
-        height: auto;
-        margin-bottom: 15px;
-        border: 2px solid #ddd;
-        border-radius: 8px;
-        object-fit: contain;
+    .precio-descuento {
+        color: #28a745;
+        font-size: 1.6rem;
+        font-weight: bold;
     }
-
-    .miniaturas {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        justify-content: center;
+    .badge-descuento {
+        background-color: #dc3545;
+        color: #fff;
+        font-size: 0.9rem;
+        margin-left: 10px;
+        padding: 4px 8px;
+        border-radius: 5px;
     }
-
-    .miniaturas img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-        border: 2px solid transparent;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-    .miniaturas img:hover,
-    .miniaturas img.active {
-        border-color: #007bff;
-        transform: scale(1.05);
+    .ahorro-texto {
+        margin-top: 10px;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #ffc107;
     }
 </style>
 {% endblock %}
@@ -49,13 +36,11 @@
     <div class="row">
         <!-- Galería -->
         <div class="col-md-6 galeria">
-            <!-- Imagen principal -->
             <img id="imagen-principal" 
                  class="imagen-principal" 
                  src="{% if producto.imagen %}{{ producto.imagen.url }}{% endif %}" 
                  alt="{{ producto.nombre }}">
 
-            <!-- Miniaturas -->
             <div class="miniaturas">
                 {% if producto.imagen %}
                     <img src="{{ producto.imagen.url }}" 
@@ -73,10 +58,21 @@
             </div>
         </div>
 
-        <!-- Info del producto -->
+        <!-- Info -->
         <div class="col-md-6">
             <h1>{{ producto.nombre }}</h1>
-            <p class="precio h4 text-success">${{ producto.precio }}</p>
+
+            {% if producto.descuento > 0 %}
+                <p>
+                    <span class="precio-original">${{ producto.precio }}</span>
+                    <span class="precio-descuento">${{ producto.precio_con_descuento|floatformat:2 }}</span>
+                    <span class="badge-descuento">-{{ producto.descuento }}%</span>
+                </p>
+                <p class="ahorro-texto">💰 Ahorrás ${{ producto.ahorro|floatformat:0 }}</p>
+            {% else %}
+                <p class="precio h4 text-success">${{ producto.precio }}</p>
+            {% endif %}
+
             <p class="descripcion">{{ producto.descripcion }}</p>
 
             {% if producto.stock == 0 %}
@@ -94,13 +90,10 @@
     </div>
 </div>
 
-<!-- Script para cambiar imagen -->
 <script>
     function cambiarImagen(elemento) {
         const imagenPrincipal = document.getElementById("imagen-principal");
         imagenPrincipal.src = elemento.src;
-
-        // Quitar "active" de todas y asignar a la clickeada
         document.querySelectorAll(".miniaturas img").forEach(img => img.classList.remove("active"));
         elemento.classList.add("active");
     }

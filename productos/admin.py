@@ -1,5 +1,8 @@
 from django.contrib import admin
 from .models import Producto, Categoria, Carrito, CarritoProducto, ProductoImagen
+from django.contrib.auth.admin import UserAdmin
+from .models import Usuario
+from .forms import UsuarioCreationForm, UsuarioChangeForm
 
 
 admin.site.register(Categoria)
@@ -21,3 +24,12 @@ class ProductoAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Producto, ProductoAdmin)
+
+
+class CustomUserAdmin(UserAdmin):
+    add_form = UsuarioCreationForm
+    form = UsuarioChangeForm
+    model = Usuario
+    list_display = ["username", "email", "telefono", "is_staff"]
+
+admin.site.register(Usuario, CustomUserAdmin)
