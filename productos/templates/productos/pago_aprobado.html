@@ -3,16 +3,17 @@
 {% block content %}
 <h1>Pago Aprobado</h1>
 
-<p>Una vez que confirmes tu pago, se generará tu pedido y se descontará el stock.</p>
+<p>Una vez que confirmes tu pago, se generará tu pedido, se descontará el stock y podrás descargar el PDF.</p>
 
 <button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
 
 <p id="mensaje"></p>
+<a id="link-pdf" href="#" target="_blank" style="display:none;">📄 Descargar PDF del pedido</a>
 
 <a href="{% url 'lista_productos' %}">Volver a la tienda</a>
 
 <script>
-// Función para obtener el CSRF token desde la cookie
+// Función para obtener CSRF token desde la cookie
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -29,13 +30,12 @@ function getCookie(name) {
 }
 
 const csrftoken = getCookie('csrftoken');
-
 const btn = document.getElementById('confirmar-pago-btn');
 const mensaje = document.getElementById('mensaje');
+const linkPDF = document.getElementById('link-pdf');
 
 btn.addEventListener('click', async function() {
     mensaje.textContent = "Procesando...";
-
     try {
         const response = await fetch("{% url 'pago_aprobado' %}", {
             method: 'POST',
@@ -49,17 +49,17 @@ btn.addEventListener('click', async function() {
 
         if (data.status === 'ok') {
             mensaje.textContent = "✅ Pedido generado correctamente. Gracias por tu compra.";
-            // Opcional: redirigir después de unos segundos
-            // setTimeout(() => window.location.href = "{% url 'lista_productos' %}", 3000);
+            if (data.pdf_url) {
+                linkPDF.href = data.pdf_url;
+                linkPDF.style.display = 'inline';
+            }
         } else {
             mensaje.textContent = "❌ " + data.message;
         }
-
     } catch (err) {
         console.error("Error en fetch:", err);
         mensaje.textContent = "❌ Ocurrió un error inesperado. Intenta nuevamente.";
     }
 });
 </script>
-
 {% endblock %}

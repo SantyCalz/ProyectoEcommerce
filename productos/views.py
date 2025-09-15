@@ -176,6 +176,27 @@ def checkout(request):
     return render(request, 'productos/checkout.html', {'carrito': carrito, 'total': total})
 
 
+from django.http import HttpResponse
+from reportlab.pdfgen import canvas
+
+from django.shortcuts import render
+from django.http import JsonResponse, HttpResponse
+from django.contrib.auth.decorators import login_required
+from .models import Carrito, Pedido, PedidoProducto, Producto
+from reportlab.pdfgen import canvas
+import io
+
+from reportlab.lib.pagesizes import A4
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+import io
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Carrito, Pedido, PedidoProducto
+
+from django.utils import timezone
+
 @login_required
 def pago_aprobado(request):
     carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
@@ -186,13 +207,15 @@ def pago_aprobado(request):
             if not carrito.carritoproducto_set.exists():
                 return JsonResponse({'status': 'error', 'message': 'No hay productos en el carrito.'})
 
+            # 1️⃣ Crear pedido en DB
             pedido = Pedido.objects.create(
                 usuario=request.user,
                 total=carrito.total(),
                 pagado=True,
-                direccion_envio=direccion  # Guardamos la dirección aquí
+                direccion_envio=direccion
             )
 
+            # 2️⃣ Crear items del pedido y descontar stock
             for item in carrito.carritoproducto_set.all():
                 PedidoProducto.objects.create(
                     pedido=pedido,
@@ -206,13 +229,68 @@ def pago_aprobado(request):
                     producto.stock = 0
                 producto.save()
 
+            # 3️⃣ Vaciar carrito
             carrito.carritoproducto_set.all().delete()
 
-            # Limpiar dirección de la session
+            # 4️⃣ Limpiar dirección de la session
             if 'direccion_envio' in request.session:
                 del request.session['direccion_envio']
 
-            return JsonResponse({'status': 'ok', 'message': 'Pedido generado correctamente.'})
+            # 5️⃣ Generar PDF tipo factura
+            buffer = io.BytesIO()
+            doc = SimpleDocTemplate(buffer, pagesize=A4)
+            elements = []
+            styles = getSampleStyleSheet()
+
+            # Obtener fecha local
+            fecha_local = timezone.localtime(pedido.fecha)
+            fecha_str = fecha_local.strftime("%d/%m/%Y %H:%M")
+
+            # Título
+            elements.append(Paragraph(f"Factura - Pedido #{pedido.numero_pedido_formateado()}", styles['Title']))
+            elements.append(Spacer(1, 12))
+
+            # Datos del cliente
+            elements.append(Paragraph(f"<b>Cliente:</b> {pedido.usuario.first_name} {pedido.usuario.last_name}", styles['Normal']))
+            elements.append(Paragraph(f"<b>Email:</b> {pedido.usuario.email}", styles['Normal']))
+            elements.append(Paragraph(f"<b>Dirección:</b> {pedido.direccion_envio}", styles['Normal']))
+            elements.append(Paragraph(f"<b>Fecha:</b> {fecha_str}", styles['Normal']))  # <-- Hora local
+            elements.append(Spacer(1, 12))
+
+            # Tabla de productos
+            data = [['Producto', 'Cantidad', 'Precio Unitario', 'Subtotal']]
+            for item in pedido.pedidoproducto_set.all():
+                subtotal = item.cantidad * item.precio_unitario
+                data.append([item.producto.nombre, str(item.cantidad), f"${item.precio_unitario:.2f}", f"${subtotal:.2f}"])
+            data.append(['', '', 'Total:', f"${pedido.total:.2f}"])
+
+            table = Table(data, colWidths=[200, 60, 100, 100])
+            table.setStyle(TableStyle([
+                ('BACKGROUND', (0,0), (-1,0), colors.lightgrey),
+                ('TEXTCOLOR',(0,0),(-1,0),colors.black),
+                ('ALIGN',(1,1),(-1,-1),'CENTER'),
+                ('GRID', (0,0), (-1,-1), 0.5, colors.grey),
+                ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+                ('BOTTOMPADDING', (0,0), (-1,0), 12),
+                ('BACKGROUND', (0,-1), (-1,-1), colors.lightgrey),
+                ('FONTNAME', (0,-1), (-1,-1), 'Helvetica-Bold'),
+            ]))
+            elements.append(table)
+
+            doc.build(elements)
+            buffer.seek(0)
+
+            # Guardar PDF en media/pedidos
+            pdf_filename = f"pedido_{pedido.numero_pedido_formateado()}.pdf"
+            with open(f"media/pedidos/{pdf_filename}", "wb") as f:
+                f.write(buffer.getbuffer())
+
+            # 6️⃣ Devolver JSON con éxito y link al PDF
+            return JsonResponse({
+                'status': 'ok',
+                'message': 'Pedido generado correctamente.',
+                'pdf_url': f"/media/pedidos/{pdf_filename}"
+            })
 
         except Exception as e:
             print("Error en pago_aprobado:", e)
@@ -220,6 +298,7 @@ def pago_aprobado(request):
 
     # GET → mostrar la página con botón
     return render(request, "productos/pago_aprobado.html", {'carrito': carrito})
+
 
 
 @login_required

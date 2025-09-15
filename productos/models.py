@@ -102,9 +102,21 @@ class Pedido(models.Model):
     direccion_envio = models.CharField(max_length=255, blank=True, null=True)
     pagado = models.BooleanField(default=False)
 
+    # Número de pedido secuencial
+    numero_pedido = models.PositiveIntegerField(unique=True, blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        if not self.numero_pedido:
+            ultimo = Pedido.objects.order_by('-numero_pedido').first()
+            self.numero_pedido = (ultimo.numero_pedido + 1) if ultimo and ultimo.numero_pedido else 1
+        super().save(*args, **kwargs)
+
+    def numero_pedido_formateado(self):
+        """Devuelve el número de pedido con ceros a la izquierda, ej: 00003"""
+        return str(self.numero_pedido).zfill(5)
 
     def __str__(self):
-        return f"Pedido #{self.id} - {self.usuario.username}"
+        return f"Pedido #{self.numero_pedido_formateado()} - {self.usuario.username}"
 
     class Meta:
         db_table = 'pedidos_usuarios'
@@ -117,8 +129,7 @@ class PedidoProducto(models.Model):
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def subtotal(self):
-        return self.producto.precio * self.cantidad
-
+        return (self.precio_unitario or 0) * (self.cantidad or 0)
 
     def __str__(self):
         return f"{self.cantidad} x {self.producto.nombre}"
