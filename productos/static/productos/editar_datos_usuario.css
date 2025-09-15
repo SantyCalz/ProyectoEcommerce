@@ -1,0 +1,72 @@
+/* Estilos para editar datos de usuario */
+
+.editar-datos-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    padding: 32px 24px;
+}
+
+.editar-datos-container h2 {
+    text-align: center;
+    margin-bottom: 24px;
+    color: #333;
+}
+
+.editar-datos-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.editar-datos-container label {
+    font-weight: 500;
+    color: #222;
+}
+
+.editar-datos-container input[type="text"],
+.editar-datos-container input[type="email"],
+.editar-datos-container input[type="password"] {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid #d0d0d0;
+    border-radius: 5px;
+    font-size: 15px;
+    margin-top: 4px;
+}
+
+.editar-datos-container button[type="submit"],
+.editar-datos-container a.btn {
+    background: #1976d2;
+    color: #fff;
+    padding: 8px 18px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    border: none;
+    margin-top: 10px;
+    transition: background 0.2s;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.editar-datos-container button[type="submit"]:hover,
+.editar-datos-container a.btn:hover {
+    background: #125ea2;
+}
+
+.editar-datos-container .errorlist {
+    color: #c62828;
+    margin: 0 0 8px 0;
+    padding: 0;
+    list-style: none;
+    font-size: 14px;
+}
+
+@media (max-width: 600px) {
+    .editar-datos-container {
+        padding: 12px 2px;
+    }
+}

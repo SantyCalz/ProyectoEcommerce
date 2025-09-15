@@ -1,0 +1,65 @@
+{% extends 'productos/base.html' %}
+
+{% block content %}
+<h1>Pago Aprobado</h1>
+
+<p>Una vez que confirmes tu pago, se generará tu pedido y se descontará el stock.</p>
+
+<button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
+
+<p id="mensaje"></p>
+
+<a href="{% url 'lista_productos' %}">Volver a la tienda</a>
+
+<script>
+// Función para obtener el CSRF token desde la cookie
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+const csrftoken = getCookie('csrftoken');
+
+const btn = document.getElementById('confirmar-pago-btn');
+const mensaje = document.getElementById('mensaje');
+
+btn.addEventListener('click', async function() {
+    mensaje.textContent = "Procesando...";
+
+    try {
+        const response = await fetch("{% url 'pago_aprobado' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken,
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'ok') {
+            mensaje.textContent = "✅ Pedido generado correctamente. Gracias por tu compra.";
+            // Opcional: redirigir después de unos segundos
+            // setTimeout(() => window.location.href = "{% url 'lista_productos' %}", 3000);
+        } else {
+            mensaje.textContent = "❌ " + data.message;
+        }
+
+    } catch (err) {
+        console.error("Error en fetch:", err);
+        mensaje.textContent = "❌ Ocurrió un error inesperado. Intenta nuevamente.";
+    }
+});
+</script>
+
+{% endblock %}

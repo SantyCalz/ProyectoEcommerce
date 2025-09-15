@@ -25,7 +25,8 @@ SECRET_KEY = 'django-insecure-a*rrx*8n6q6l=v%y4ze45^w0=(dt7(efc9hpmzx@!lf1a+z$h1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '578e3f1268c5.ngrok-free.app']
+
 
 
 # Application definition
@@ -132,3 +133,6 @@ LOGIN_REDIRECT_URL = '/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'productos.Usuario'
 
+# settings.py
+MP_ACCESS_TOKEN = "APP_USR-659340762835775-091415-d107d619602a205f2ceef439eb3bbfb4-2669198849"
+MP_PUBLIC_KEY = "APP_USR-f00f52bd-6145-4161-8a5f-21feda075d81"

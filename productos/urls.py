@@ -12,6 +12,13 @@ urlpatterns = [
     path('logout/', views.logout_usuario, name='logout_usuario'),
     path('vaciar/', views.vaciar_carrito, name='vaciar_carrito'),
     path('producto/<int:producto_id>/', views.detalle_producto, name='detalle_producto'),
-    
 
+
+    path('mi_cuenta/', views.mi_cuenta, name='mi_cuenta'),
+    path('mi_cuenta/editar/', views.editar_datos_usuario, name='editar_datos_usuario'),
+    path('mi_cuenta/historial/', views.historial_compras, name='historial_compras'),
+    path("checkout/success/manual/", views.checkout_success_manual, name="checkout_success_manual"),
+    path("checkout/failure/", views.checkout_failure, name="checkout_failure"),
+    path("checkout/pending/", views.checkout_pending, name="checkout_pending"),
+    path('pago_aprobado/', views.pago_aprobado, name='pago_aprobado'),
 ]

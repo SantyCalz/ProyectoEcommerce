@@ -1,0 +1,22 @@
+{% extends 'productos/base.html' %}
+{% load static %}
+{% block head %}
+    <link rel="stylesheet" href="{% static 'productos/editar_datos_usuario.css' %}">
+{% endblock %}
+{% block content %}
+<div class="editar-datos-container">
+    <h2>Editar mis datos</h2>
+    <form method="post">
+        {% csrf_token %}
+        <div>
+            {{ form.as_p }}
+        </div>
+        <h3>Cambiar contraseña</h3>
+        <div>
+            {{ password_form.as_p }}
+        </div>
+        <button type="submit">Guardar cambios</button>
+        <a class="btn" href="{% url 'mi_cuenta' %}">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

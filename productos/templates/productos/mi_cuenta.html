@@ -1,0 +1,8 @@
+{% extends 'productos/base.html' %}
+{% block content %}
+<h1>Mi Cuenta</h1>
+<div class="mi-cuenta-botones">
+    <a class="btn" href="{% url 'editar_datos_usuario' %}">Editar mis datos</a>
+    <a class="btn" href="{% url 'historial_compras' %}">Ver historial de compras</a>
+</div>
+{% endblock %}

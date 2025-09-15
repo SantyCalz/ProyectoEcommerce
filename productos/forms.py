@@ -30,6 +30,7 @@ class UsuarioCreationForm(UserCreationForm):
         fields = ("username", "email", "telefono")
 
 class UsuarioChangeForm(UserChangeForm):
+    password = None  # Oculta el campo password original
     class Meta:
         model = Usuario
-        fields = ("username", "email", "telefono")
+        fields = ("first_name", "last_name", "telefono")

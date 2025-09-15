@@ -13,6 +13,7 @@
         <a href="{% url 'lista_productos' %}">Productos</a>
         {% if user.is_authenticated %}
             <a href="{% url 'ver_carrito' %}">Carrito</a>
+            <a href="{% url 'mi_cuenta' %}">Mi Cuenta</a>
             <a href="{% url 'logout_usuario' %}">Logout</a>
         {% else %}
             <a href="{% url 'login_usuario' %}">Login</a>
