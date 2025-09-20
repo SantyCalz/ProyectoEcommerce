@@ -1,11 +1,22 @@
 {% extends 'productos/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Login</h1>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Entrar</button>
-</form>
-<p>¿No tenés cuenta? <a href="{% url 'registro' %}">Registrarse</a></p>
+<div class="login-container">
+    <div class="login-card">
+        <h2 class="login-title">Login</h2>
+        <form method="post" class="login-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn-login">Entrar</button>
+        </form>
+        <p class="login-footer">
+            ¿No tenés cuenta? <a href="{% url 'registro' %}">Registrarse</a>
+        </p>
+    </div>
+</div>
 {% endblock %}

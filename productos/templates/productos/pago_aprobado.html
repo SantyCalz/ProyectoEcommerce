@@ -1,16 +1,23 @@
 {% extends 'productos/base.html' %}
-
+{% load static %}
 {% block content %}
-<h1>Pago Aprobado</h1>
+<link rel="stylesheet" href="{% static 'css/pago_aprobado.css' %}">
 
-<p>Una vez que confirmes tu pago, se generará tu pedido, se descontará el stock y podrás descargar el PDF.</p>
+<!-- Card principal -->
+<div class="pago-card">
+    <h1>Pago Aprobado</h1>
 
-<button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
+    <p>Una vez que confirmes tu pago, se generará tu pedido, se descontará el stock y podrás descargar el PDF.</p>
 
-<p id="mensaje"></p>
-<a id="link-pdf" href="#" target="_blank" style="display:none;">📄 Descargar PDF del pedido</a>
+    <button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
 
-<a href="{% url 'lista_productos' %}">Volver a la tienda</a>
+    <p id="mensaje"></p>
+
+    <a id="link-pdf" href="#" target="_blank" style="display:none;">📄 Descargar PDF del pedido</a>
+</div>
+
+<!-- Link fuera de la card -->
+<a class="volver-tienda" href="{% url 'lista_productos' %}">Volver a la tienda</a>
 
 <script>
 // Función para obtener CSRF token desde la cookie
@@ -51,7 +58,7 @@ btn.addEventListener('click', async function() {
             mensaje.textContent = "✅ Pedido generado correctamente. Gracias por tu compra.";
             if (data.pdf_url) {
                 linkPDF.href = data.pdf_url;
-                linkPDF.style.display = 'inline';
+                linkPDF.style.display = 'inline-block';
             }
         } else {
             mensaje.textContent = "❌ " + data.message;
@@ -62,4 +69,5 @@ btn.addEventListener('click', async function() {
     }
 });
 </script>
+
 {% endblock %}

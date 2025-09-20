@@ -1,10 +1,14 @@
 {% extends 'productos/base.html' %}
+{% load static %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/carrito.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Mi Carrito</h1>
-
 <div class="contenido-carrito">
     <div class="carrito-panel">
+        <h1 class="titulo-carrito">Mi Carrito</h1>
         {% if carrito.carritoproducto_set.all %}
         <table class="carrito-tabla">
             <thead>
@@ -31,22 +35,23 @@
                         {% else %}
                             <a class="btn-carrito" href="{% url 'agregar_al_carrito' item.producto.id %}">+</a>
                         {% endif %}
-                        <a class="btn-carrito eliminar" href="{% url 'eliminar_del_carrito' item.producto.id %}">Eliminar</a>
+                        <a class="btn-carrito eliminar" href="{% url 'eliminar_del_carrito' item.producto.id %}">-</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-        <p>Total: ${{ total }}</p>
-        <div class="botones-carrito">
-            <a href="{% url 'lista_productos' %}">Seguir comprando</a>
-            <a href="{% url 'checkout' %}">Ir al Checkout</a>
-            <a href="{% url 'vaciar_carrito' %}">Vaciar carrito</a>
-        </div>
+        <div class="total-botones-container">
+    <p>Total: ${{ total }}</p>
+    <div class="botones-carrito">
+        <a href="{% url 'lista_productos' %}">Seguir comprando</a>
+        <a href="{% url 'checkout' %}">Ir al Checkout</a>
+        <a href="{% url 'vaciar_carrito' %}">Vaciar carrito</a>
+    </div>
+</div>
         {% else %}
             <p>No hay productos en el carrito.</p>
         {% endif %}
     </div>
 </div>
-
 {% endblock %}

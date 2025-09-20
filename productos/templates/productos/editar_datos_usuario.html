@@ -1,22 +1,44 @@
 {% extends 'productos/base.html' %}
 {% load static %}
 {% block head %}
-    <link rel="stylesheet" href="{% static 'productos/editar_datos_usuario.css' %}">
+<link rel="stylesheet" href="{% static 'css/editar_datos_usuarios.css' %}">
 {% endblock %}
+
 {% block content %}
-<div class="editar-datos-container">
-    <h2>Editar mis datos</h2>
-    <form method="post">
-        {% csrf_token %}
-        <div>
-            {{ form.as_p }}
+<div class="editar-container">
+
+    <div class="cards-wrapper">
+        <!-- Card izquierda -->
+        <div class="editar-card">
+            <h2 class="editar-title">Datos personales</h2>
+            <form class="editar-form">
+                <div class="form-group">
+                    <input type="text" placeholder="Nombre">
+                    <input type="text" placeholder="Apellido">
+                    <input type="text" placeholder="Teléfono">
+                </div>
+            </form>
         </div>
-        <h3>Cambiar contraseña</h3>
-        <div>
-            {{ password_form.as_p }}
+
+        <!-- Card derecha -->
+        <div class="editar-card">
+            <h2 class="editar-title">Contraseña</h2>
+            <form class="editar-form">
+                <div class="form-group">
+                    <input type="password" placeholder="Contraseña vieja">
+                    <input type="password" placeholder="Nueva contraseña">
+                    <input type="password" placeholder="Confirmar nueva contraseña">
+                </div>
+            </form>
         </div>
-        <button type="submit">Guardar cambios</button>
-        <a class="btn" href="{% url 'mi_cuenta' %}">Cancelar</a>
-    </form>
+    </div>
+
+    <!-- Botones fuera de las cards -->
+    <div class="button-group">
+        <button class="btn-editar">Guardar cambios</button>
+        <a href="{% url 'mi_cuenta' %}" class="btn-cancel">Cancelar</a>
+    </div>
+
 </div>
+
 {% endblock %}

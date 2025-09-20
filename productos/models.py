@@ -20,7 +20,7 @@ class Producto(models.Model):
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     descuento = models.PositiveIntegerField(default=0)  # en porcentaje
     stock = models.PositiveIntegerField(default=0)
-    imagen = models.ImageField(upload_to="productos/", blank=True, null=True)
+    imagen = models.ImageField(upload_to="img_productos/", blank=True, null=True)
     categoria = models.ForeignKey(  # 🔹 relación con categoría
         Categoria,
         on_delete=models.CASCADE,
@@ -53,7 +53,8 @@ class Producto(models.Model):
 
 class ProductoImagen(models.Model):
     producto = models.ForeignKey(Producto, related_name="imagenes", on_delete=models.CASCADE)
-    imagen = models.ImageField(upload_to="productos/extra/")
+    # productos/models.py
+    imagen = models.ImageField(upload_to='img_productos/', blank=True, null=True)
 
 
     def __str__(self):

@@ -43,7 +43,12 @@ def historial_compras(request):
 
 def detalle_producto(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
-    return render(request, 'productos/detalle_producto.html', {'producto': producto})
+    productos_similares = Producto.objects.filter(categoria=producto.categoria).exclude(id=producto.id)[:8]
+    return render(request, 'productos/detalle_producto.html', {
+        'producto': producto,
+        'productos_similares': productos_similares,
+    })
+
 
 
 def lista_productos(request):
@@ -72,7 +77,7 @@ def agregar_al_carrito(request, producto_id):
     producto = get_object_or_404(Producto, id=producto_id)
 
     if producto.stock <= 0:
-        return redirect('lista_productos')
+        return redirect('lista_productos')  # Si no hay stock, vuelve a la lista de productos
 
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
     carrito_producto, created = CarritoProducto.objects.get_or_create(
@@ -83,7 +88,13 @@ def agregar_al_carrito(request, producto_id):
         if carrito_producto.cantidad < producto.stock:
             carrito_producto.cantidad += 1
             carrito_producto.save()
-    return redirect('ver_carrito')
+    
+    # ← Quitamos el redirect al carrito
+    # return redirect('ver_carrito')
+
+    # En su lugar, podemos volver a la página anterior:
+    return redirect(request.META.get('HTTP_REFERER', 'lista_productos'))
+
 
 
 @login_required
@@ -97,7 +108,16 @@ def ver_carrito(request):
 def eliminar_del_carrito(request, producto_id):
     carrito, created = Carrito.objects.get_or_create(usuario=request.user)
     producto = get_object_or_404(Producto, id=producto_id)
-    carrito.productos.remove(producto)
+    item = CarritoProducto.objects.filter(carrito=carrito, producto=producto).first()
+
+    if item:
+        if item.cantidad > 1:
+            item.cantidad -= 1
+            item.save()
+        else:
+            # Si queda 1 y se disminuye, eliminar del carrito
+            item.delete()
+    
     return redirect('ver_carrito')
 
 
@@ -261,7 +281,8 @@ def pago_aprobado(request):
             data = [['Producto', 'Cantidad', 'Precio Unitario', 'Subtotal']]
             for item in pedido.pedidoproducto_set.all():
                 subtotal = item.cantidad * item.precio_unitario
-                data.append([item.producto.nombre, str(item.cantidad), f"${item.precio_unitario:.2f}", f"${subtotal:.2f}"])
+                nombre_paragraph = Paragraph(item.producto.nombre, styles['Normal'])
+                data.append([nombre_paragraph, str(item.cantidad), f"${item.precio_unitario:.2f}", f"${subtotal:.2f}"])
             data.append(['', '', 'Total:', f"${pedido.total:.2f}"])
 
             table = Table(data, colWidths=[200, 60, 100, 100])
@@ -282,14 +303,14 @@ def pago_aprobado(request):
 
             # Guardar PDF en media/pedidos
             pdf_filename = f"pedido_{pedido.numero_pedido_formateado()}.pdf"
-            with open(f"media/pedidos/{pdf_filename}", "wb") as f:
+            with open(f"static/media/pedidos/{pdf_filename}", "wb") as f:
                 f.write(buffer.getbuffer())
 
             # 6️⃣ Devolver JSON con éxito y link al PDF
             return JsonResponse({
                 'status': 'ok',
                 'message': 'Pedido generado correctamente.',
-                'pdf_url': f"/media/pedidos/{pdf_filename}"
+                'pdf_url': f"/static/media/pedidos/{pdf_filename}"
             })
 
         except Exception as e:
