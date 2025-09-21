@@ -5,7 +5,7 @@ ENV/
 .venv/
 
 # Archivos de base de datos
-*.sqlite3
+
 
 # Archivos de migraciones compilados
 **/__pycache__/
