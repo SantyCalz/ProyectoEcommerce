@@ -27,3 +27,6 @@ Thumbs.db
 
 # Archivos de credenciales o variables de entorno
 .env
+
+# PDFs generados por el sistema
+static/media/pedidos/
