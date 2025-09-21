@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-a*rrx*8n6q6l=v%y4ze45^w0=(dt7(efc9hpmzx@!lf1a+z$h1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '578e3f1268c5.ngrok-free.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'proyectoecommerce.onrender.com']
 
 
 INSTALLED_APPS = [
