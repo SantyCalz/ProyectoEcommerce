@@ -1,19 +1,31 @@
+# ======================================================
+# Imports necesarios para modelos de Django
+# ======================================================
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 
 
+# ======================================================
+# Modelo Categoria
+# Representa categorías de productos
+# ======================================================
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
-
 
     def __str__(self):
         return self.nombre
 
     class Meta:
         db_table = 'categorias_productos'
+        verbose_name = "Categoría (para organizar productos)"
+        verbose_name_plural = "Categorías (para organizar productos)"
 
 
+# ======================================================
+# Modelo Producto
+# Representa productos con precio, stock, descuento y relación con categoría
+# ======================================================
 class Producto(models.Model):
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField()
@@ -21,7 +33,7 @@ class Producto(models.Model):
     descuento = models.PositiveIntegerField(default=0)  # en porcentaje
     stock = models.PositiveIntegerField(default=0)
     imagen = models.ImageField(upload_to="img_productos/", blank=True, null=True)
-    categoria = models.ForeignKey(  # 🔹 relación con categoría
+    categoria = models.ForeignKey(
         Categoria,
         on_delete=models.CASCADE,
         related_name="productos",
@@ -38,63 +50,85 @@ class Producto(models.Model):
 
     @property
     def ahorro(self):
-        """Monto exacto de dinero que el cliente ahorra"""
+        """Monto exacto que el cliente ahorra con el descuento"""
         if self.descuento > 0:
             return self.precio * self.descuento / 100
         return 0
 
-
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} (${self.precio})"
 
     class Meta:
         db_table = 'productos'
+        verbose_name = "Producto (artículo a la venta)"
+        verbose_name_plural = "Productos (artículos a la venta)"
 
 
+# ======================================================
+# Modelo ProductoImagen
+# Permite asociar múltiples imágenes a un producto
+# ======================================================
 class ProductoImagen(models.Model):
     producto = models.ForeignKey(Producto, related_name="imagenes", on_delete=models.CASCADE)
-    # productos/models.py
     imagen = models.ImageField(upload_to='img_productos/', blank=True, null=True)
-
 
     def __str__(self):
         return f"Imagen de {self.producto.nombre}"
 
     class Meta:
         db_table = 'imagenes_productos'
+        verbose_name = "Imagen de Producto"
+        verbose_name_plural = "Imágenes de Productos"
 
 
+# ======================================================
+# Modelo Carrito
+# Representa el carrito de un usuario, con productos y total
+# ======================================================
 class Carrito(models.Model):
     usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     productos = models.ManyToManyField(Producto, through='CarritoProducto', blank=True)
     creado = models.DateTimeField(auto_now_add=True)
 
     def total(self):
+        """Calcula el total sumando los subtotales de cada producto"""
         return sum(item.subtotal() for item in self.carritoproducto_set.all())
+
+    def __str__(self):
+        return f"Carrito de {self.usuario.username} ({self.carritoproducto_set.count()} productos)"
 
     class Meta:
         db_table = 'carritos_usuarios'
+        verbose_name = "Carrito (de cada usuario)"
+        verbose_name_plural = "Carritos (de cada usuario)"
 
-    def __str__(self):
-        return f"Carrito de {self.usuario.username}"
 
-
+# ======================================================
+# Modelo CarritoProducto
+# Relación intermedia entre Carrito y Producto con cantidad
+# ======================================================
 class CarritoProducto(models.Model):
     carrito = models.ForeignKey('Carrito', on_delete=models.CASCADE)
     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
     cantidad = models.PositiveIntegerField(default=1)
 
     def subtotal(self):
+        """Calcula el subtotal de este producto en el carrito"""
         return self.producto.precio * self.cantidad
 
-
     def __str__(self):
-        return f"{self.cantidad} x {self.producto.nombre}"
+        return f"{self.cantidad} x {self.producto.nombre} (Carrito de {self.carrito.usuario.username})"
 
     class Meta:
         db_table = 'carritos_productos'
+        verbose_name = "Producto en Carrito (contenido del carrito)"
+        verbose_name_plural = "Productos en Carrito (contenido del carrito)"
 
 
+# ======================================================
+# Modelo Pedido
+# Representa un pedido realizado por un usuario
+# ======================================================
 class Pedido(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     fecha = models.DateTimeField(auto_now_add=True)
@@ -107,6 +141,7 @@ class Pedido(models.Model):
     numero_pedido = models.PositiveIntegerField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
+        """Genera un número de pedido secuencial si no existe"""
         if not self.numero_pedido:
             ultimo = Pedido.objects.order_by('-numero_pedido').first()
             self.numero_pedido = (ultimo.numero_pedido + 1) if ultimo and ultimo.numero_pedido else 1
@@ -121,8 +156,14 @@ class Pedido(models.Model):
 
     class Meta:
         db_table = 'pedidos_usuarios'
+        verbose_name = "Pedido (compra confirmada)"
+        verbose_name_plural = "Pedidos (compras confirmadas)"
 
 
+# ======================================================
+# Modelo PedidoProducto
+# Relación intermedia entre Pedido y Producto con cantidad y precio unitario
+# ======================================================
 class PedidoProducto(models.Model):
     pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
     producto = models.ForeignKey('Producto', on_delete=models.CASCADE)
@@ -130,36 +171,45 @@ class PedidoProducto(models.Model):
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def subtotal(self):
+        """Calcula el subtotal de este producto en el pedido"""
         return (self.precio_unitario or 0) * (self.cantidad or 0)
 
     def __str__(self):
-        return f"{self.cantidad} x {self.producto.nombre}"
+        return f"{self.cantidad} x {self.producto.nombre} (Pedido #{self.pedido.numero_pedido_formateado()})"
 
     class Meta:
         db_table = 'pedidos_productos'
+        verbose_name = "Producto en Pedido (contenido del pedido)"
+        verbose_name_plural = "Productos en Pedido (contenido del pedido)"
 
 
-# 🔹 Perfil extendido del usuario
+# ======================================================
+# Modelo Perfil
+# Extiende la información de usuario con teléfono desglosado
+# ======================================================
 class Perfil(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     telefono_codigo = models.CharField(max_length=5, blank=True, null=True, help_text="Ej: +54")
     telefono_numero = models.CharField(max_length=15, blank=True, null=True, help_text="Ej: 113456789")
-
 
     def __str__(self):
         return f"Perfil de {self.user.username}"
 
     class Meta:
         db_table = 'perfiles_usuarios'
+        verbose_name = "Perfil de Usuario"
+        verbose_name_plural = "Perfiles de Usuarios"
 
 
-
+# ======================================================
+# Modelo Usuario
+# Extiende AbstractUser agregando el campo 'telefono' y configuraciones de permisos
+# ======================================================
 class Usuario(AbstractUser):
-    # El orden de los campos en la base de datos será:
-    # id, is_superuser, first_name, last_name, email, telefono, password
     telefono = models.CharField(max_length=20, blank=True, null=True)
-    # Los campos id, is_superuser, first_name, last_name, email, password ya existen en AbstractUser
-    # El resto de campos de permisos se mantienen al final
+    # Los campos de AbstractUser (id, is_superuser, first_name, last_name, email, password, etc.) se mantienen
+
+    # Campos de permisos personalizados con related_name distinto
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='productos_usuario_set',
@@ -180,3 +230,5 @@ class Usuario(AbstractUser):
 
     class Meta:
         db_table = 'datos_usuarios'
+        verbose_name = "Usuario (persona que usa el sistema)"
+        verbose_name_plural = "Usuarios (personas que usan el sistema)"

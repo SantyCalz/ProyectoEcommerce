@@ -1,0 +1,11 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <h1 style="color:#0ea5e9;">📊 Visualizador de Base de Datos</h1>
+  <p>Estas son todas las tablas detectadas en tu base de datos:</p>
+  <ul style="background:#1e1e1e; color:white; padding:1rem; border-radius:8px;">
+    {% for table in tables %}
+      <li>{{ table }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
