@@ -366,15 +366,19 @@ def checkout_pending(request):
 
 
 def registro(request):
-    if request.method == 'POST':
+    if request.method == "POST":
         form = RegistroForm(request.POST)
         if form.is_valid():
-            usuario = form.save()
-            login(request, usuario)
-            return redirect('lista_productos')
+            usuario = form.save()  # Guarda el usuario en la DB con la contraseña hasheada
+            login(request, usuario)  # Loguea automáticamente al usuario
+            return redirect('lista_productos')  # Redirige después del registro
+        else:
+            print(form.errors)  # Esto ayuda a depurar errores del form
     else:
         form = RegistroForm()
+    
     return render(request, 'productos/registro.html', {'form': form})
+
 
 
 def login_usuario(request):
