@@ -3,7 +3,6 @@
 # ======================================================
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from django.utils.html import format_html
 
 # Importación de modelos y formularios personalizados
 from .models import (
@@ -11,7 +10,6 @@ from .models import (
     ProductoImagen, Usuario, Pedido, PedidoProducto
 )
 from .forms import UsuarioCreationForm
-
 
 # ======================================================
 # Registro de categorías
@@ -26,28 +24,23 @@ class CategoriaAdmin(admin.ModelAdmin):
 
 admin.site.register(Categoria, CategoriaAdmin)
 
-
 # ======================================================
 # Inline para imágenes adicionales de productos
 # ======================================================
 class ProductoImagenInline(admin.TabularInline):
     model = ProductoImagen
     extra = 1
-    fields = ["imagen", "preview"]
-    readonly_fields = ["preview"]
+    fields = ["imagen"]
+    # Eliminamos preview
+    # readonly_fields = ["preview"]
 
-    def preview(self, obj):
-        if obj.imagen:
-            return format_html('<img src="{}" style="height: 80px;"/>', obj.imagen.url)
-        return "-"
-    preview.short_description = "Vista previa"
-
+admin.site.register(ProductoImagenInline)
 
 # ======================================================
 # Admin de Producto
 # ======================================================
 class ProductoAdmin(admin.ModelAdmin):
-    list_display = ("nombre", "precio", "stock", "categoria", "imagen_principal_preview")
+    list_display = ("nombre", "precio", "stock", "categoria")
     search_fields = ("nombre", "descripcion")
     list_filter = ("categoria", "stock")
     inlines = [ProductoImagenInline]
@@ -60,7 +53,7 @@ class ProductoAdmin(admin.ModelAdmin):
             "fields": ("precio", "descuento", "stock")
         }),
         ("Imagen principal", {
-            "fields": ("imagen", "imagen_principal_preview")
+            "fields": ("imagen",)  # Quitamos imagen_principal_preview
         }),
         ("Imágenes adicionales", {
             "fields": (),
@@ -68,16 +61,10 @@ class ProductoAdmin(admin.ModelAdmin):
         }),
     )
 
-    readonly_fields = ("imagen_principal_preview",)
-
-    def imagen_principal_preview(self, obj):
-        if obj.imagen:
-            return format_html('<img src="{}" style="height: 100px;"/>', obj.imagen.url)
-        return "-"
-    imagen_principal_preview.short_description = "Vista previa"
+    # Eliminamos readonly_fields
+    # readonly_fields = ("imagen_principal_preview",)
 
 admin.site.register(Producto, ProductoAdmin)
-
 
 # ======================================================
 # Admin de Carrito
@@ -108,7 +95,6 @@ class CarritoAdmin(admin.ModelAdmin):
 
 admin.site.register(Carrito, CarritoAdmin)
 
-
 # ======================================================
 # Admin de CarritoProducto
 # ======================================================
@@ -126,7 +112,6 @@ class CarritoProductoAdmin(admin.ModelAdmin):
     subtotal.short_description = "Subtotal"
 
 admin.site.register(CarritoProducto, CarritoProductoAdmin)
-
 
 # ======================================================
 # Admin de Pedido
@@ -151,7 +136,6 @@ class PedidoAdmin(admin.ModelAdmin):
 
 admin.site.register(Pedido, PedidoAdmin)
 
-
 # ======================================================
 # Admin de PedidoProducto
 # ======================================================
@@ -169,7 +153,6 @@ class PedidoProductoAdmin(admin.ModelAdmin):
     subtotal.short_description = "Subtotal"
 
 admin.site.register(PedidoProducto, PedidoProductoAdmin)
-
 
 # ======================================================
 # Admin personalizado para Usuario

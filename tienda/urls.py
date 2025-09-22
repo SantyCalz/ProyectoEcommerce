@@ -8,6 +8,5 @@ urlpatterns = [
     path('', include('productos.urls')),  # Todas las URLs de la app productos
 ]
 
-# Sirve MEDIA siempre, no solo en DEBUG
+# Servir MEDIA files en producción y desarrollo
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
