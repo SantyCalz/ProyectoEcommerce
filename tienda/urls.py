@@ -8,7 +8,6 @@ urlpatterns = [
     path('', include('productos.urls')),  # Todas las URLs de la app productos
 ]
 
-
-# 👇 Esto sirve para poder mostrar imágenes en desarrollo
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# Sirve MEDIA siempre, no solo en DEBUG
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
