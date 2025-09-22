@@ -34,7 +34,7 @@ class ProductoImagenInline(admin.TabularInline):
     # Eliminamos preview
     # readonly_fields = ["preview"]
 
-admin.site.register(ProductoImagenInline)
+
 
 # ======================================================
 # Admin de Producto
