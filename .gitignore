@@ -5,7 +5,7 @@ ENV/
 .venv/
 
 # Archivos de base de datos
-*.sqlite3
+
 
 # Archivos de migraciones compilados
 **/__pycache__/
@@ -28,5 +28,9 @@ Thumbs.db
 # Archivos de credenciales o variables de entorno
 .env
 
-# PDFs generados por el sistema
+# Carpeta de pedidos con PDFs generados (no subir al repositorio)
 static/media/pedidos/
+
+# Base de datos SQLite local
+*.sqlite3
+db.sqlite3

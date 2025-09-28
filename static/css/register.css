@@ -1,4 +1,6 @@
-/* ================= CONTENEDOR PRINCIPAL ================= */
+/* ============================ */
+/*     CONTENEDOR PRINCIPAL      */
+/* ============================ */
 .register-container {
     display: flex;
     justify-content: center;
@@ -8,7 +10,9 @@
     padding: 1rem;
 }
 
-/* ================= CARD ================= */
+/* ============================ */
+/*             CARD              */
+/* ============================ */
 .register-card {
     background: #fff;
     border-radius: 16px;
@@ -19,7 +23,9 @@
     animation: fadeIn 0.6s ease forwards;
 }
 
-/* ================= TÍTULO ================= */
+/* ============================ */
+/*            TÍTULO             */
+/* ============================ */
 .register-title {
     font-size: 1.8rem;
     font-weight: 600;
@@ -28,7 +34,9 @@
     text-align: center;
 }
 
-/* ================= FORMULARIO ================= */
+/* ============================ */
+/*           FORMULARIO           */
+/* ============================ */
 .register-form .form-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -69,7 +77,9 @@
     margin-top: 0.25rem;
 }
 
-/* ================= BOTÓN REGISTRARSE ================= */
+/* ============================ */
+/*      BOTÓN REGISTRARSE        */
+/* ============================ */
 .btn-register {
     grid-column: 1 / span 2;
     margin: 1rem auto 0 auto;
@@ -91,7 +101,9 @@
     transform: scale(1.05);
 }
 
-/* ================= FOOTER ================= */
+/* ============================ */
+/*             FOOTER            */
+/* ============================ */
 .register-footer {
     margin-top: 1.5rem;
     font-size: 0.95rem;
@@ -109,13 +121,17 @@
     text-decoration: underline;
 }
 
-/* ================= ANIMACIÓN ================= */
+/* ============================ */
+/*           ANIMACIÓN           */
+/* ============================ */
 @keyframes fadeIn {
     0% { opacity: 0; transform: translateY(-20px); }
     100% { opacity: 1; transform: translateY(0); }
 }
 
-/* ================= AJUSTES ESPECÍFICOS DEL GRID ================= */
+/* ============================ */
+/* AJUSTES ESPECÍFICOS DEL GRID  */
+/* ============================ */
 .register-form .form-grid .form-group:nth-child(1) { grid-column: 1; } /* first_name */
 .register-form .form-grid .form-group:nth-child(2) { grid-column: 2; } /* last_name */
 .register-form .form-grid .form-group:nth-child(3) { grid-column: 1 / span 2; } /* email */
@@ -124,7 +140,9 @@
 .register-form .form-grid .form-group:nth-child(6) { grid-column: 1; } /* password1 */
 .register-form .form-grid .form-group:nth-child(7) { grid-column: 2; } /* password2 */
 
-/* ================= RESPONSIVE ================= */
+/* ============================ */
+/*           RESPONSIVE          */
+/* ============================ */
 @media (max-width: 768px) {
     .register-form .form-grid {
         grid-template-columns: 1fr;

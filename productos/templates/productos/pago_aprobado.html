@@ -4,80 +4,66 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/pago_aprobado.css' %}">
 
-<!-- ================= CARD PRINCIPAL ================= -->
 <div class="pago-card">
     <h1>Pago Aprobado</h1>
 
-    <!-- Explicación del proceso -->
     <p>Una vez que confirmes tu pago, se generará tu pedido, se descontará el stock y podrás descargar el PDF.</p>
 
-    <!-- Botón para confirmar el pago y generar el pedido -->
+    <!-- Botón para generar el pedido -->
     <button id="confirmar-pago-btn">Confirmar Pago y Generar Pedido</button>
 
-    <!-- Mensajes dinámicos (éxito, error, procesando) -->
-    <p id="mensaje"></p>
-
-    <!-- Link para descargar el PDF del pedido, oculto inicialmente -->
-    <a id="link-pdf" href="#" target="_blank" style="display:none;">📄 Descargar PDF del pedido</a>
+    <!-- Link al PDF, oculto hasta que el pedido se genere -->
+    <a id="link-pdf" href="#" target="_blank" style="display:none; margin-top:0.5rem; font-weight:bold; color:#1d4ed8;">
+        📄 Descargar PDF del pedido
+    </a>
 </div>
 
-<!-- Link para volver a la tienda -->
 <a class="volver-tienda" href="{% url 'lista_productos' %}">Volver a la tienda</a>
 
 <script>
-/* ================= FUNCIONES AUXILIARES ================= */
-// Función para obtener CSRF token desde la cookie
+// Obtener CSRF token
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
-        for (let i = 0; i < cookies.length; i++) {
-            const cookie = cookies[i].trim();
-            if (cookie.startsWith(name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
+        document.cookie.split(';').forEach(cookie => {
+            if (cookie.trim().startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.trim().substring(name.length + 1));
             }
-        }
+        });
     }
     return cookieValue;
 }
 
 const csrftoken = getCookie('csrftoken');
 const btn = document.getElementById('confirmar-pago-btn');
-const mensaje = document.getElementById('mensaje');
 const linkPDF = document.getElementById('link-pdf');
 
-/* ================= EVENTO CLICK DEL BOTÓN ================= */
 btn.addEventListener('click', async function() {
-    mensaje.textContent = "Procesando..."; // Mostrar mensaje mientras se procesa
+    btn.disabled = true;  // Evitar múltiples clics
 
     try {
-        // Realizar petición POST para generar el pedido
         const response = await fetch("{% url 'pago_aprobado' %}", {
             method: 'POST',
             headers: {
-                'X-CSRFToken': csrftoken,          // Token CSRF para seguridad
+                'X-CSRFToken': csrftoken,
                 'X-Requested-With': 'XMLHttpRequest'
             }
         });
 
         const data = await response.json();
 
-        // Mostrar mensajes según el resultado
-        if (data.status === 'ok') {
-            mensaje.textContent = "✅ Pedido generado correctamente. Gracias por tu compra.";
-            if (data.pdf_url) {
-                linkPDF.href = data.pdf_url;
-                linkPDF.style.display = 'inline-block'; // Mostrar link al PDF
-            }
+        if (data.status === 'ok' && data.pdf_url) {
+            // Pedido generado: mostrar PDF y ocultar botón
+            linkPDF.href = data.pdf_url;
+            linkPDF.style.display = 'inline-block';
+            btn.style.display = 'none';
         } else {
-            mensaje.textContent = "❌ " + data.message; // Error enviado por el servidor
+            btn.disabled = false; // Reactivar botón si hay error
         }
     } catch (err) {
         console.error("Error en fetch:", err);
-        mensaje.textContent = "❌ Ocurrió un error inesperado. Intenta nuevamente.";
+        btn.disabled = false;
     }
 });
 </script>
-
 {% endblock %}

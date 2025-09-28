@@ -6,16 +6,14 @@
 {% endblock %}
 
 {% block content %}
-<!-- Contenedor principal de registro -->
 <div class="register-container">
     <div class="register-card">
         <h2 class="register-title">Registro</h2>
 
-        <!-- Formulario de registro -->
+        <!-- ================= FORMULARIO DE REGISTRO ================= -->
         <form method="post" class="register-form">
             {% csrf_token %}
 
-            <!-- Grid para organizar los campos del formulario -->
             <div class="form-grid">
 
                 <!-- Nombre -->
@@ -23,7 +21,11 @@
                     {{ form.first_name.label_tag }}
                     {{ form.first_name }}
                     {% if form.first_name.errors %}
-                        <div class="form-error">{{ form.first_name.errors.0 }}</div>
+                        <div class="form-error">
+                            {% for error in form.first_name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -32,16 +34,24 @@
                     {{ form.last_name.label_tag }}
                     {{ form.last_name }}
                     {% if form.last_name.errors %}
-                        <div class="form-error">{{ form.last_name.errors.0 }}</div>
+                        <div class="form-error">
+                            {% for error in form.last_name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
-                <!-- Email (ocupando todo el ancho) -->
+                <!-- Email -->
                 <div class="form-group full-width">
                     {{ form.email.label_tag }}
                     {{ form.email }}
                     {% if form.email.errors %}
-                        <div class="form-error">{{ form.email.errors.0 }}</div>
+                        <div class="form-error">
+                            {% for error in form.email.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -50,7 +60,11 @@
                     {{ form.username.label_tag }}
                     {{ form.username }}
                     {% if form.username.errors %}
-                        <div class="form-error">{{ form.username.errors.0 }}</div>
+                        <div class="form-error">
+                            {% for error in form.username.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -59,7 +73,11 @@
                     {{ form.telefono.label_tag }}
                     {{ form.telefono }}
                     {% if form.telefono.errors %}
-                        <div class="form-error">{{ form.telefono.errors.0 }}</div>
+                        <div class="form-error">
+                            {% for error in form.telefono.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -68,7 +86,11 @@
                     {{ form.password1.label_tag }}
                     {{ form.password1 }}
                     {% if form.password1.errors %}
-                        <div class="form-error">{{ form.password1.errors.0 }}</div>
+                        <div class="form-error">
+                            {% for error in form.password1.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
 
@@ -77,16 +99,21 @@
                     {{ form.password2.label_tag }}
                     {{ form.password2 }}
                     {% if form.password2.errors %}
-                        <div class="form-error">{{ form.password2.errors.0 }}</div>
+                        <div class="form-error">
+                            {% for error in form.password2.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
                     {% endif %}
                 </div>
+
             </div>
 
-            <!-- Botón de enviar formulario -->
+            <!-- Botón de envío -->
             <button type="submit" class="btn-register">Registrarse</button>
         </form>
 
-        <!-- Enlace al login -->
+        <!-- ================= ENLACE AL LOGIN ================= -->
         <p class="register-footer">
             ¿Ya tenés cuenta? <a href="{% url 'login_usuario' %}">Iniciar sesión</a>
         </p>

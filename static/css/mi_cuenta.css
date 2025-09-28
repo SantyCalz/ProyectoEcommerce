@@ -1,4 +1,6 @@
-/* ================= CONTENEDOR PRINCIPAL ================= */
+/* ============================ */
+/*     CONTENEDOR PRINCIPAL      */
+/* ============================ */
 .mi-cuenta-container {
     display: flex;
     justify-content: center;
@@ -11,7 +13,9 @@
     animation: fadeInUp 0.6s forwards;
 }
 
-/* ================= ANIMACIÓN GENERAL ================= */
+/* ============================ */
+/*      ANIMACIÓN GENERAL        */
+/* ============================ */
 @keyframes fadeInUp {
     to {
         opacity: 1;
@@ -19,7 +23,9 @@
     }
 }
 
-/* ================= TARJETA MI CUENTA ================= */
+/* ============================ */
+/*       TARJETA MI CUENTA       */
+/* ============================ */
 .mi-cuenta-card {
     background: #ffffff;
     border-radius: 16px;
@@ -30,7 +36,9 @@
     text-align: center;
 }
 
-/* ================= TÍTULO ================= */
+/* ============================ */
+/*           TÍTULO              */
+/* ============================ */
 .mi-cuenta-title {
     font-size: 1.8rem;
     font-weight: 600;
@@ -38,7 +46,9 @@
     color: #333;
 }
 
-/* ================= BOTONES ================= */
+/* ============================ */
+/*           BOTONES             */
+/* ============================ */
 .mi-cuenta-botones {
     display: flex;
     flex-direction: column;
@@ -61,10 +71,13 @@
 
 .btn-cuenta:hover {
     background: #10638a;
+    color: #fff !important;
     transform: translateY(-2px);
 }
 
-/* ================= HISTORIAL DE COMPRAS ================= */
+/* ============================ */
+/*      HISTORIAL DE COMPRAS     */
+/* ============================ */
 .historial-compras-container {
     display: flex;
     flex-direction: column;
@@ -140,10 +153,13 @@
 
 .historial-compras-container .btn:hover {
     background-color: #10638a;
+    color: #fff !important;
     transform: translateY(-2px);
 }
 
-/* ================= RESPONSIVE ================= */
+/* ============================ */
+/*          RESPONSIVE           */
+/* ============================ */
 @media (max-width: 768px) {
     .historial-compras-table th,
     .historial-compras-table td {

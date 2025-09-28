@@ -1,55 +1,63 @@
-/* ========================= */
-/*     CONTENEDOR GENERAL     */
-/* ========================= */
+/* ============================ */
+/*     BLOQUE PRINCIPAL         */
+/* ============================ */
 .editar-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* centrado vertical */
+    justify-content: center;
     min-height: 100vh;
     background: #f5f7fa;
     padding: 2rem 1rem;
     gap: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s forwards;
 }
 
-/* ========================= */
-/*  WRAPPER DE CARDS HORIZ.  */
-/* ========================= */
 .cards-wrapper {
     display: flex;
     justify-content: center;
-    align-items: center; /* centrado vertical de las cards */
+    align-items: center;
     gap: 2rem;
     width: 100%;
-    max-width: 800px; /* ancho más centrado */
-    flex-wrap: wrap; /* permite que bajen si no hay espacio */
+    max-width: 800px;
+    flex-wrap: wrap;
 }
 
-/* ========================= */
-/*           CARD            */
-/* ========================= */
+/* ============================ */
+/*       ANIMACIÓN GENERAL       */
+/* ============================ */
+@keyframes fadeInUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================ */
+/*       TARJETA / CARD          */
+/* ============================ */
 .editar-card {
     background: #fff;
     border-radius: 16px;
     padding: 2rem;
-    flex: 1 1 350px; /* ancho flexible con mínimo más pequeño */
-    max-width: 400px; /* ancho máximo más compacto */
+    flex: 1 1 350px;
+    max-width: 400px;
     box-shadow: 0 6px 24px rgba(0,0,0,0.1);
-    animation: fadeIn 0.6s ease forwards;
-    text-align: center; /* centrar contenido de la card */
+    text-align: center;
     display: flex;
     flex-direction: column;
-    align-items: center; /* centrar elementos internos */
+    align-items: center;
 }
 
-/* Card más pequeña */
 .card-pequena {
     padding: 1.5rem;
 }
 
-/* ========================= */
-/*     TÍTULO DE CARD         */
-/* ========================= */
+/* ============================ */
+/*           TÍTULO              */
+/* ============================ */
 .editar-title {
     font-size: 1.6rem;
     font-weight: 600;
@@ -58,9 +66,9 @@
     text-align: center;
 }
 
-/* ========================= */
-/*     FORMULARIO CARD        */
-/* ========================= */
+/* ============================ */
+/*           FORMULARIO          */
+/* ============================ */
 .editar-form {
     display: flex;
     flex-direction: column;
@@ -88,7 +96,7 @@
     border: 1px solid #ccc;
     font-size: 1rem;
     width: 100%;
-    box-sizing: border-box; /* incluye padding y border en el ancho total */
+    box-sizing: border-box;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
     background-color: #f0f0f0;
     color: #555;
@@ -98,9 +106,9 @@
     cursor: default;
 }
 
-/* ========================= */
-/*      BOTONES FUERA         */
-/* ========================= */
+/* ============================ */
+/*          BOTONES              */
+/* ============================ */
 .button-group {
     display: flex;
     justify-content: center;
@@ -108,39 +116,37 @@
     gap: 2rem;
     margin-top: 2rem;
     flex-wrap: wrap;
-    width: 100%; /* ocupa todo el ancho disponible */
+    width: 100%;
 }
 
 .btn-cancel {
-    padding: 0.8rem 2rem;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
+    display: block;
     background: #0077cc;
     color: #fff;
-    transition: all 0.3s ease;
-    display: block;
-    margin: 0 auto; /* centrar el botón */
+    font-size: 1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 8px;
+    border: none;
+    text-align: center;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    margin: 0 auto;
 }
 
+/* ============================ */
+/*           EFECTOS             */
+/* ============================ */
 .btn-cancel:hover {
     background: #005fa3;
-    color: #fff; /* mantener texto blanco en hover */
+    color: #fff;
+    transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(0,0,0,0.1);
 }
 
-/* ========================= */
-/*        ANIMACIÓN           */
-/* ========================= */
-@keyframes fadeIn {
-    0% { opacity: 0; transform: translateY(-20px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
-
-/* ========================= */
-/*         RESPONSIVE         */
-/* ========================= */
+/* ============================ */
+/*          RESPONSIVE           */
+/* ============================ */
 @media (max-width: 1000px) {
     .cards-wrapper {
         flex-direction: column;
@@ -148,7 +154,7 @@
     }
 
     .editar-card {
-        max-width: 90%; /* ocupa más espacio en móvil */
+        max-width: 90%;
         min-width: 300px;
     }
 }

@@ -1,4 +1,6 @@
-/* ================= CONTENEDOR PRINCIPAL ================= */
+/* ============================ */
+/*     BLOQUE PRINCIPAL          */
+/* ============================ */
 .detalle-producto {
     max-width: 1200px;
     margin: 4em auto;
@@ -10,14 +12,18 @@
     box-shadow: 0 8px 32px rgba(0,0,0,0.07);
 }
 
-/* ================= FILA PRINCIPAL ================= */
+/* ============================ */
+/*       FILA PRINCIPAL          */
+/* ============================ */
 .producto-row {
     display: flex;
     gap: 2rem;
     flex-wrap: wrap;
 }
 
-/* ================= GALERÍA DE IMÁGENES ================= */
+/* ============================ */
+/*        GALERÍA DE IMÁGENES    */
+/* ============================ */
 .galeria {
     flex: 1;
     display: flex;
@@ -25,18 +31,16 @@
     align-items: center;
 }
 
-/* Imagen principal cuadrada */
 .imagen-principal {
     width: 100%;
     max-width: 550px;
-    height: 550px; /* fuerza espacio cuadrado */
+    height: 550px; /* mantiene forma cuadrada */
     border-radius: 16px;
     object-fit: contain;
     box-shadow: 0 4px 16px rgba(0,0,0,0.1);
     margin-bottom: 1rem;
 }
 
-/* Miniaturas */
 .miniaturas {
     display: flex;
     gap: 0.5rem;
@@ -61,7 +65,9 @@
     transform: scale(1.05);
 }
 
-/* ================= INFORMACIÓN DEL PRODUCTO ================= */
+/* ============================ */
+/*     INFORMACIÓN DEL PRODUCTO  */
+/* ============================ */
 .info-producto {
     flex: 1;
     display: flex;
@@ -70,45 +76,12 @@
     position: relative;
 }
 
-/* Botón agregar al carrito */
-.btn-agregar {
-    background-color: #0ea5e9;
-    color: #fff;
-    padding: 0.75rem 13rem;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: background-color 0.3s;
-    text-align: center;
-    display: inline-block;
-    text-decoration: none;
-    margin-top: 14rem;
-    align-self: flex-start;
-}
-
-/* Hover botón agregar */
-.btn-agregar:hover:not(.disabled) {
-    background-color: #10638a;
-    color: #fff;
-}
-
-/* Botón deshabilitado */
-.btn-agregar.disabled {
-    background-color: #9ca3af;
-    cursor: not-allowed;
-    pointer-events: none;
-}
-
-/* Nombre del producto */
 h1 {
     font-size: 2rem;
     font-weight: 600;
     color: #111;
 }
 
-/* ================= PRECIO ================= */
 .precio-section {
     display: flex;
     flex-direction: column;
@@ -128,7 +101,6 @@ h1 {
     color: #002035;
 }
 
-/* Badge de descuento */
 .badge-descuento {
     background-color: #0284c7;
     color: #fff;
@@ -145,7 +117,6 @@ h1 {
     white-space: nowrap;
 }
 
-/* ================= BENEFICIOS ================= */
 .icono-beneficio {
     width: 28px;
     height: 28px;
@@ -170,7 +141,37 @@ h1 {
 .text-warning { color: #d97706; }
 .text-danger { color: #dc2626; }
 
-/* ================= DESCRIPCIÓN ================= */
+/* Botón agregar al carrito */
+.btn-agregar {
+    background-color: #0ea5e9;
+    color: #fff;
+    padding: 0.75rem 13rem;
+    border-radius: 12px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+    margin-top: 14rem;
+    align-self: flex-start;
+}
+
+.btn-agregar:hover:not(.disabled) {
+    background-color: #10638a;
+}
+
+.btn-agregar.disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* ============================ */
+/*       DESCRIPCIÓN PRODUCTO    */
+/* ============================ */
 .descripcion {
     background-color: #f8fafc;
     border-radius: 12px;
@@ -182,21 +183,9 @@ h1 {
     margin-top: 2rem;
 }
 
-/* ================= RESPONSIVE ================= */
-@media (max-width: 992px) {
-    .producto-row {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .galeria { order: 1; }
-    .info-producto { order: 2; width: 100%; }
-
-    .imagen-principal { max-width: 100%; height: 300px; }
-    .miniaturas img { width: 60px; height: 60px; }
-}
-
-/* ================= PRODUCTOS SIMILARES ================= */
+/* ============================ */
+/*          PRODUCTOS SIMILARES   */
+/* ============================ */
 .similares-container {
     max-width: 1200px;
     margin: 3rem auto;
@@ -239,13 +228,11 @@ h1 {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* Hover tarjeta similar */
 .similar-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(0, 175, 254, 0.25);
 }
 
-/* Imagen y título en tarjetas similares */
 .similar-card img {
     width: 100%;
     height: 180px;
@@ -264,15 +251,28 @@ h1 {
 .similar-card h3 a { color: inherit; text-decoration: none; }
 .similar-card h3 a:hover { color: #00affe; }
 
-/* Precios y botón carrito en tarjeta */
 .precio-carrito { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
 .precios { display: flex; flex-direction: column; }
 .precio-original { text-decoration: line-through; color: #888; font-size: 0.85rem; margin-bottom: 0.2rem; }
 .precio-descuento { color: #00affe; font-weight: bold; font-size: 1.2rem; }
-.btn-carrito { display: flex; align-items: center; justify-content: center; background-color: #0ea5e9; color: #fff; width: 36px; height: 36px; border-radius: 8px; font-size: 1rem; text-decoration: none; transition: all 0.3s ease; }
+.btn-carrito {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #0ea5e9;
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
 .btn-carrito:hover { background-color: #10638a; transform: translateY(-2px); }
 
-/* ================= FLECHAS DEL SLIDER ================= */
+/* ============================ */
+/*         FLECHAS SLIDER         */
+/* ============================ */
 .slider-arrow {
     background-color: #0ea5e9;
     color: #fff;
@@ -291,10 +291,25 @@ h1 {
 }
 
 .slider-arrow:hover { background-color: #10638a; }
-.slider-arrow.prev { margin-right: 1rem; }  /* no superpone con imagen */
-.slider-arrow.next { margin-left: 1rem; }  /* no superpone con imagen */
+.slider-arrow.prev { margin-right: 1rem; }
+.slider-arrow.next { margin-left: 1rem; }
 
-/* ================= RESPONSIVE SLIDER ================= */
+/* ============================ */
+/*           RESPONSIVE           */
+/* ============================ */
+@media (max-width: 992px) {
+    .producto-row {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .galeria { order: 1; }
+    .info-producto { order: 2; width: 100%; }
+
+    .imagen-principal { max-width: 100%; height: 300px; }
+    .miniaturas img { width: 60px; height: 60px; }
+}
+
 @media (max-width: 1200px) { .similar-card { flex: 0 0 calc(33.33% - 1rem); } }
 @media (max-width: 992px) { .similar-card { flex: 0 0 calc(50% - 0.75rem); } }
 @media (max-width: 600px) { .similar-card { flex: 0 0 100%; } }

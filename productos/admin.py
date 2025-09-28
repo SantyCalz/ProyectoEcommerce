@@ -12,7 +12,9 @@ from .models import (
 from .forms import UsuarioCreationForm
 
 # ======================================================
-# Registro de categorías
+# Admin de Categorías
+# - Muestra nombre y cantidad de productos asociados
+# - Permite búsqueda por nombre
 # ======================================================
 class CategoriaAdmin(admin.ModelAdmin):
     list_display = ("nombre", "cantidad_productos")
@@ -25,19 +27,18 @@ class CategoriaAdmin(admin.ModelAdmin):
 admin.site.register(Categoria, CategoriaAdmin)
 
 # ======================================================
-# Inline para imágenes adicionales de productos
+# Inline de imágenes adicionales de Productos
+# - Permite subir varias imágenes extra para un producto
 # ======================================================
 class ProductoImagenInline(admin.TabularInline):
     model = ProductoImagen
     extra = 1
     fields = ["imagen"]
-    # Eliminamos preview
-    # readonly_fields = ["preview"]
-
-
 
 # ======================================================
-# Admin de Producto
+# Admin de Productos
+# - Muestra información clave: nombre, precio, stock, categoría
+# - Permite búsqueda, filtros y carga de imágenes adicionales
 # ======================================================
 class ProductoAdmin(admin.ModelAdmin):
     list_display = ("nombre", "precio", "stock", "categoria")
@@ -53,7 +54,7 @@ class ProductoAdmin(admin.ModelAdmin):
             "fields": ("precio", "descuento", "stock")
         }),
         ("Imagen principal", {
-            "fields": ("imagen",)  # Quitamos imagen_principal_preview
+            "fields": ("imagen",)
         }),
         ("Imágenes adicionales", {
             "fields": (),
@@ -61,13 +62,12 @@ class ProductoAdmin(admin.ModelAdmin):
         }),
     )
 
-    # Eliminamos readonly_fields
-    # readonly_fields = ("imagen_principal_preview",)
-
 admin.site.register(Producto, ProductoAdmin)
 
 # ======================================================
-# Admin de Carrito
+# Admin de Carritos
+# - Muestra usuario, total, cantidad de productos y fecha
+# - Incluye detalle de productos del carrito en un inline
 # ======================================================
 class CarritoProductoInline(admin.TabularInline):
     model = CarritoProducto
@@ -97,6 +97,8 @@ admin.site.register(Carrito, CarritoAdmin)
 
 # ======================================================
 # Admin de CarritoProducto
+# - Relación carrito-producto
+# - Muestra cantidad, subtotal y usuario dueño del carrito
 # ======================================================
 class CarritoProductoAdmin(admin.ModelAdmin):
     list_display = ("producto", "cantidad", "carrito", "usuario_del_carrito", "subtotal")
@@ -114,7 +116,9 @@ class CarritoProductoAdmin(admin.ModelAdmin):
 admin.site.register(CarritoProducto, CarritoProductoAdmin)
 
 # ======================================================
-# Admin de Pedido
+# Admin de Pedidos
+# - Muestra número de pedido, usuario, fecha, total y estado
+# - Incluye los productos del pedido en un inline
 # ======================================================
 class PedidoProductoInline(admin.TabularInline):
     model = PedidoProducto
@@ -138,6 +142,8 @@ admin.site.register(Pedido, PedidoAdmin)
 
 # ======================================================
 # Admin de PedidoProducto
+# - Relación pedido-producto
+# - Muestra cantidad, subtotal y usuario asociado
 # ======================================================
 class PedidoProductoAdmin(admin.ModelAdmin):
     list_display = ("producto", "cantidad", "precio_unitario", "pedido", "usuario_del_pedido", "subtotal")
@@ -155,7 +161,9 @@ class PedidoProductoAdmin(admin.ModelAdmin):
 admin.site.register(PedidoProducto, PedidoProductoAdmin)
 
 # ======================================================
-# Admin personalizado para Usuario
+# Admin personalizado de Usuario
+# - Usa un formulario custom para creación
+# - Permite administrar datos extra (ej. teléfono) y permisos
 # ======================================================
 class CustomUserAdmin(UserAdmin):
     add_form = UsuarioCreationForm

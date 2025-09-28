@@ -1,4 +1,6 @@
-/* ================= CARD PRINCIPAL ================= */
+/* ============================ */
+/*     CONTENEDOR PRINCIPAL      */
+/* ============================ */
 .pago-card {
     max-width: 400px;
     margin: 3rem auto;
@@ -12,7 +14,9 @@
     animation: fadeInUp 0.5s forwards;
 }
 
-/* ================= ANIMACIÓN GENERAL ================= */
+/* ============================ */
+/*      ANIMACIÓN GENERAL        */
+/* ============================ */
 @keyframes fadeInUp {
     to {
         opacity: 1;
@@ -20,14 +24,18 @@
     }
 }
 
-/* ================= TÍTULO ================= */
+/* ============================ */
+/*            TÍTULO             */
+/* ============================ */
 .pago-card h1 {
     margin-bottom: 1rem;
     font-size: 1.8rem;
     color: #111;
 }
 
-/* ================= TEXTO DESCRIPTIVO ================= */
+/* ============================ */
+/*       TEXTO DESCRIPTIVO       */
+/* ============================ */
 .pago-card p {
     font-size: 1rem;
     color: #333;
@@ -35,7 +43,9 @@
     line-height: 1.5;
 }
 
-/* ================= BOTÓN CONFIRMAR PAGO ================= */
+/* ============================ */
+/*    BOTÓN CONFIRMAR PAGO       */
+/* ============================ */
 #confirmar-pago-btn {
     padding: 0.8rem 1.5rem;
     border-radius: 10px;
@@ -53,7 +63,9 @@
     transform: scale(1.05);
 }
 
-/* ================= MENSAJE DE ESTADO ================= */
+/* ============================ */
+/*        MENSAJE DE ESTADO      */
+/* ============================ */
 #mensaje {
     margin-top: 1rem;
     font-size: 1rem;
@@ -61,7 +73,9 @@
     color: #111;
 }
 
-/* ================= LINK PDF ================= */
+/* ============================ */
+/*           LINK PDF            */
+/* ============================ */
 #link-pdf {
     display: inline-block;
     margin-top: 1rem;
@@ -79,7 +93,9 @@
     transform: scale(1.05);
 }
 
-/* ================= LINK VOLVER A LA TIENDA ================= */
+/* ============================ */
+/*  LINK VOLVER A LA TIENDA      */
+/* ============================ */
 .volver-tienda {
     display: block;
     margin: 2rem auto 3rem auto;
@@ -98,7 +114,9 @@
     color: #10638a;
 }
 
-/* ================= RESPONSIVE ================= */
+/* ============================ */
+/*           RESPONSIVE          */
+/* ============================ */
 @media (max-width: 600px) {
     .pago-card {
         margin: 2rem 1rem;

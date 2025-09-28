@@ -2,37 +2,32 @@
 {% load static %}
 
 {% block head %}
-<!-- CSS específico para la edición de datos del usuario -->
+<!-- CSS específico para la sección de ver datos del usuario -->
 <link rel="stylesheet" href="{% static 'css/ver_datos_usuario.css' %}">
 {% endblock %}
 
 {% block content %}
-<!-- Contenedor principal de la sección de edición -->
 <div class="editar-container">
 
     <div class="cards-wrapper">
-        <!-- Card que muestra los datos personales del usuario -->
+        <!-- Card que muestra los datos del usuario -->
         <div class="editar-card card-pequena">
             <h2 class="editar-title">Datos del usuario</h2>
             <div class="editar-form">
                 <div class="form-group">
-                    <!-- Campo de usuario (solo lectura) -->
+                    <!-- Campos solo lectura -->
                     <label>Usuario</label>
                     <input type="text" value="{{ user.username }}" readonly>
 
-                    <!-- Campo de nombre (solo lectura) -->
                     <label>Nombre</label>
                     <input type="text" value="{{ user.first_name }}" readonly>
 
-                    <!-- Campo de apellido (solo lectura) -->
                     <label>Apellido</label>
                     <input type="text" value="{{ user.last_name }}" readonly>
 
-                    <!-- Campo de correo electrónico (solo lectura) -->
                     <label>Correo electrónico</label>
                     <input type="email" value="{{ user.email }}" readonly>
 
-                    <!-- Campo de teléfono (solo lectura) -->
                     <label>Teléfono</label>
                     <input type="text" value="{{ user.telefono }}" readonly>
                 </div>
@@ -40,7 +35,7 @@
         </div>
     </div>
 
-    <!-- Botón para volver a la sección "Mi Cuenta" -->
+    <!-- Botón para volver a "Mi Cuenta" -->
     <div class="button-group">
         <a href="{% url 'mi_cuenta' %}" class="btn-cancel">Volver</a>
     </div>

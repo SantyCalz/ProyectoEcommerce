@@ -2,14 +2,24 @@
 {% load static %}
 
 {% block head %}
+<!-- CSS específico para la vista de carrito -->
 <link rel="stylesheet" href="{% static 'css/carrito.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="contenido-carrito">
+
+    <!-- ===========================
+         Panel principal del carrito
+         =========================== -->
     <div class="carrito-panel">
         <h1 class="titulo-carrito">Mi Carrito</h1>
 
+        <!-- ===========================
+             Validación: carrito con productos
+             - Si hay productos, mostramos tabla
+             - Si está vacío, mostramos mensaje de feedback
+        =========================== -->
         {% if carrito.carritoproducto_set.exists %}
             <table class="carrito-tabla">
                 <thead>
@@ -29,13 +39,22 @@
                         <td>${{ item.producto.precio }}</td>
                         <td>${{ item.subtotal }}</td>
                         <td>
+                            <!-- ===========================
+                                 Feedback de stock
+                                 - Sin stock: mensaje rojo
+                                 - Cantidad máxima alcanzada: aviso amarillo
+                                 - Botón + habilitado si hay stock
+                            =========================== -->
                             {% if item.producto.stock == 0 %}
                                 <span class="sin-stock">Sin Stock</span>
                             {% elif item.cantidad >= item.producto.stock %}
                                 <span class="stock-bajo">Máximo disponible</span>
                             {% else %}
+                                <!-- Botón para agregar 1 unidad más -->
                                 <a class="btn-carrito" href="{% url 'agregar_al_carrito' item.producto.id %}">+</a>
                             {% endif %}
+
+                            <!-- Botón para disminuir cantidad -->
                             <a class="btn-carrito eliminar" href="{% url 'eliminar_del_carrito' item.producto.id %}">-</a>
                         </td>
                     </tr>
@@ -43,6 +62,12 @@
                 </tbody>
             </table>
 
+            <!-- ===========================
+                 Total y acciones generales
+                 - Muestra el total acumulado
+                 - Botones: seguir comprando, checkout, vaciar carrito
+                 - Feedback: el usuario ve claramente el total y opciones
+            =========================== -->
             <div class="total-botones-container">
                 <p>Total: ${{ total }}</p>
                 <div class="botones-carrito">
@@ -53,6 +78,9 @@
             </div>
 
         {% else %}
+            <!-- ===========================
+                 Feedback: carrito vacío
+                 =========================== -->
             <p>No hay productos en el carrito.</p>
         {% endif %}
     </div>

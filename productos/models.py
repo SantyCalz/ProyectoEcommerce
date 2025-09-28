@@ -8,7 +8,8 @@ from django.contrib.auth.models import AbstractUser
 
 # ======================================================
 # Modelo Categoria
-# Representa categorías de productos
+# - Representa categorías para organizar productos
+# - Tiene nombre único
 # ======================================================
 class Categoria(models.Model):
     nombre = models.CharField(max_length=100, unique=True)
@@ -24,13 +25,15 @@ class Categoria(models.Model):
 
 # ======================================================
 # Modelo Producto
-# Representa productos con precio, stock, descuento y relación con categoría
+# - Representa un producto con precio, stock, descuento
+# - Relación con Categoria
+# - Permite calcular precio con descuento y ahorro
 # ======================================================
 class Producto(models.Model):
     nombre = models.CharField(max_length=200)
     descripcion = models.TextField()
     precio = models.DecimalField(max_digits=10, decimal_places=2)
-    descuento = models.PositiveIntegerField(default=0)  # en porcentaje
+    descuento = models.PositiveIntegerField(default=0)
     stock = models.PositiveIntegerField(default=0)
     imagen = models.ImageField(upload_to="img_productos/", blank=True, null=True)
     categoria = models.ForeignKey(
@@ -43,17 +46,11 @@ class Producto(models.Model):
 
     @property
     def precio_con_descuento(self):
-        """Devuelve el precio final con descuento aplicado"""
-        if self.descuento > 0:
-            return self.precio - (self.precio * self.descuento / 100)
-        return self.precio
+        return self.precio - (self.precio * self.descuento / 100) if self.descuento else self.precio
 
     @property
     def ahorro(self):
-        """Monto exacto que el cliente ahorra con el descuento"""
-        if self.descuento > 0:
-            return self.precio * self.descuento / 100
-        return 0
+        return self.precio * self.descuento / 100 if self.descuento else 0
 
     def __str__(self):
         return f"{self.nombre} (${self.precio})"
@@ -66,7 +63,7 @@ class Producto(models.Model):
 
 # ======================================================
 # Modelo ProductoImagen
-# Permite asociar múltiples imágenes a un producto
+# - Permite asociar múltiples imágenes a un producto
 # ======================================================
 class ProductoImagen(models.Model):
     producto = models.ForeignKey(Producto, related_name="imagenes", on_delete=models.CASCADE)
@@ -83,7 +80,9 @@ class ProductoImagen(models.Model):
 
 # ======================================================
 # Modelo Carrito
-# Representa el carrito de un usuario, con productos y total
+# - Representa el carrito de un usuario
+# - Relación ManyToMany con productos a través de CarritoProducto
+# - Permite calcular total
 # ======================================================
 class Carrito(models.Model):
     usuario = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -91,7 +90,6 @@ class Carrito(models.Model):
     creado = models.DateTimeField(auto_now_add=True)
 
     def total(self):
-        """Calcula el total sumando los subtotales de cada producto"""
         return sum(item.subtotal() for item in self.carritoproducto_set.all())
 
     def __str__(self):
@@ -105,7 +103,8 @@ class Carrito(models.Model):
 
 # ======================================================
 # Modelo CarritoProducto
-# Relación intermedia entre Carrito y Producto con cantidad
+# - Intermedia entre Carrito y Producto
+# - Almacena cantidad y calcula subtotal
 # ======================================================
 class CarritoProducto(models.Model):
     carrito = models.ForeignKey('Carrito', on_delete=models.CASCADE)
@@ -113,8 +112,7 @@ class CarritoProducto(models.Model):
     cantidad = models.PositiveIntegerField(default=1)
 
     def subtotal(self):
-        """Calcula el subtotal de este producto en el carrito"""
-        return self.producto.precio * self.cantidad
+        return self.producto.precio_con_descuento * self.cantidad
 
     def __str__(self):
         return f"{self.cantidad} x {self.producto.nombre} (Carrito de {self.carrito.usuario.username})"
@@ -127,7 +125,9 @@ class CarritoProducto(models.Model):
 
 # ======================================================
 # Modelo Pedido
-# Representa un pedido realizado por un usuario
+# - Representa un pedido realizado por un usuario
+# - Relación ManyToMany con Producto a través de PedidoProducto
+# - Calcula número de pedido secuencial
 # ======================================================
 class Pedido(models.Model):
     usuario = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -136,19 +136,15 @@ class Pedido(models.Model):
     productos = models.ManyToManyField('Producto', through='PedidoProducto')
     direccion_envio = models.CharField(max_length=255, blank=True, null=True)
     pagado = models.BooleanField(default=False)
-
-    # Número de pedido secuencial
     numero_pedido = models.PositiveIntegerField(unique=True, blank=True, null=True)
 
     def save(self, *args, **kwargs):
-        """Genera un número de pedido secuencial si no existe"""
         if not self.numero_pedido:
             ultimo = Pedido.objects.order_by('-numero_pedido').first()
             self.numero_pedido = (ultimo.numero_pedido + 1) if ultimo and ultimo.numero_pedido else 1
         super().save(*args, **kwargs)
 
     def numero_pedido_formateado(self):
-        """Devuelve el número de pedido con ceros a la izquierda, ej: 00003"""
         return str(self.numero_pedido).zfill(5)
 
     def __str__(self):
@@ -162,7 +158,8 @@ class Pedido(models.Model):
 
 # ======================================================
 # Modelo PedidoProducto
-# Relación intermedia entre Pedido y Producto con cantidad y precio unitario
+# - Intermedia entre Pedido y Producto
+# - Almacena cantidad y precio unitario
 # ======================================================
 class PedidoProducto(models.Model):
     pedido = models.ForeignKey('Pedido', on_delete=models.CASCADE)
@@ -171,7 +168,6 @@ class PedidoProducto(models.Model):
     precio_unitario = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def subtotal(self):
-        """Calcula el subtotal de este producto en el pedido"""
         return (self.precio_unitario or 0) * (self.cantidad or 0)
 
     def __str__(self):
@@ -185,7 +181,8 @@ class PedidoProducto(models.Model):
 
 # ======================================================
 # Modelo Perfil
-# Extiende la información de usuario con teléfono desglosado
+# - Información adicional del usuario
+# - Teléfono desglosado en código y número
 # ======================================================
 class Perfil(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -203,13 +200,12 @@ class Perfil(models.Model):
 
 # ======================================================
 # Modelo Usuario
-# Extiende AbstractUser agregando el campo 'telefono' y configuraciones de permisos
+# - Extiende AbstractUser agregando teléfono
+# - Configura related_name para permisos y grupos
 # ======================================================
 class Usuario(AbstractUser):
     telefono = models.CharField(max_length=20, blank=True, null=True)
-    # Los campos de AbstractUser (id, is_superuser, first_name, last_name, email, password, etc.) se mantienen
 
-    # Campos de permisos personalizados con related_name distinto
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='productos_usuario_set',
